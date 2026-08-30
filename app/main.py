@@ -7,11 +7,18 @@ main.py — API تصنيف شكاوى محافظة دمشق (multi-label).
 التوثيق التفاعلي (Swagger) بيصير جاهز تلقائياً على:
     http://localhost:8000/docs
 """
+import mimetypes
+from pathlib import Path
+
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 from .model_service import router as model_router
+
+FRONTEND_DIR = Path(__file__).resolve().parent.parent / "frontend"
+mimetypes.add_type("application/javascript", ".js")
 
 app = FastAPI(
     title="Damascus Complaint Router API",
@@ -26,6 +33,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.mount("/ui", StaticFiles(directory=FRONTEND_DIR, html=True), name="frontend")
 
 
 class ClassifyRequest(BaseModel):
@@ -43,6 +52,11 @@ class ClassifyResponse(BaseModel):
 
 class BatchClassifyRequest(BaseModel):
     texts: list[str] = Field(..., min_length=1, max_length=200)
+    threshold: float | None = Field(None, ge=0.0, le=1.0, description="عتبة اختيارية تُطبق على كل النصوص")
+
+
+class BatchClassifyResponse(BaseModel):
+    results: list[ClassifyResponse | dict[str, str]]
 
 
 @app.get("/health")
@@ -66,13 +80,14 @@ def classify(req: ClassifyRequest):
     return result
 
 
-@app.post("/classify_batch")
+@app.post("/classify_batch", response_model=BatchClassifyResponse)
 def classify_batch(req: BatchClassifyRequest):
     results = []
+    threshold = req.threshold if req.threshold is not None else 0.5
     for text in req.texts:
         if not text.strip():
             results.append({"error": "نص فاضي"})
             continue
-        r = model_router.route(text)
+        r = model_router.route(text, threshold=threshold)
         results.append(r)
     return {"results": results}

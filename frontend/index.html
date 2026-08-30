@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="واجهة تصنيف شكاوى محافظة دمشق" />
+    <title>موجّه الشكاوى | محافظة دمشق</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <a class="brand" href="/ui/" aria-label="الصفحة الرئيسية">
+          <span class="brand-mark">د</span>
+          <span>
+            <strong>موجّه الشكاوى</strong>
+            <small>محافظة دمشق</small>
+          </span>
+        </a>
+        <div id="serviceStatus" class="service-status pending" role="status">
+          <span class="status-dot"></span>
+          <span>جارٍ فحص الخدمة</span>
+        </div>
+      </header>
+
+      <section class="intro">
+        <p class="eyebrow">DAMASCUS COMPLAINT ROUTER</p>
+        <h1>حوّل الشكوى إلى الجهة المناسبة.</h1>
+        <p class="intro-copy">اكتب تفاصيل الشكوى كما وردت، وسيقوم النموذج باقتراح المديرية الأقرب لمعالجتها.</p>
+      </section>
+
+      <section class="workspace" aria-label="تصنيف شكوى">
+        <div class="form-panel">
+          <div class="panel-heading">
+            <div>
+              <p class="section-kicker">01 / إدخال الشكوى</p>
+              <h2>ما المشكلة؟</h2>
+            </div>
+            <span id="characterCount" class="character-count">0 / 2000</span>
+          </div>
+
+          <form id="classifyForm">
+            <label class="field-label" for="complaintText">نص الشكوى</label>
+            <textarea id="complaintText" name="text" maxlength="2000" required placeholder="مثال: الحاوية مكسورة والقمامة مكدسة على الرصيف منذ أسبوع..."></textarea>
+            <div class="form-footer">
+              <span class="hint">اكتب وصفًا واضحًا ومحددًا للمشكلة</span>
+              <button id="classifyButton" class="primary-button" type="submit">
+                <span>تصنيف الشكوى</span>
+                <span aria-hidden="true">←</span>
+              </button>
+            </div>
+          </form>
+
+          <div class="advanced-options">
+            <label class="threshold-label" for="threshold">عتبة الثقة</label>
+            <input id="threshold" type="range" min="0" max="1" step="0.05" value="0.5" />
+            <output id="thresholdValue" for="threshold">0.50</output>
+            <span class="threshold-note">كلما ارتفعت، زادت الحاجة للمراجعة اليدوية</span>
+          </div>
+        </div>
+
+        <aside id="resultPanel" class="result-panel empty" aria-live="polite">
+          <div class="result-empty">
+            <span class="empty-icon">↗</span>
+            <h2>النتيجة ستظهر هنا</h2>
+            <p>أرسل نص الشكوى لعرض المديرية المقترحة ودرجة الثقة.</p>
+          </div>
+        </aside>
+      </section>
+
+      <section class="departments-section">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">02 / الدليل</p>
+            <h2>المديريات المتاحة</h2>
+          </div>
+          <span id="departmentCount" class="count-badge">-- مديرية</span>
+        </div>
+        <div id="departmentsList" class="departments-list"><span class="loading-line">جارٍ تحميل الدليل...</span></div>
+      </section>
+
+      <footer class="footer">
+        <span>Damascus Complaint Router API</span>
+        <a href="/docs" target="_blank" rel="noreferrer">توثيق API</a>
+      </footer>
+    </main>
+    <script src="./app.js" defer></script>
+  </body>
+</html>

@@ -28,13 +28,15 @@ uvicorn app.main:app --reload --port 8000
   "departments": ["مديرية النظافة", "مديرية الصيانة و الإنارة"],
   "confidences": {"مديرية النظافة": 0.789, "مديرية الصيانة و الإنارة": 0.573},
   "action": "auto_route",
-  "scrubbed_text": "..."
+  "top_guess": null,
+  "top_guess_confidence": null
 }
 ```
 لو ولا قسم عدّى العتبة، `action="human_review"` و`departments=[]`، مع `top_guess` كمؤشر للمراجعة اليدوية.
 
 ### `POST /classify_batch`
-نفس الشي لعدة نصوص دفعة وحدة (`{"texts": [...]}`، حد أقصى 200).
+نفس الشي لعدة نصوص دفعة وحدة (`{"texts": [...]}`، حد أقصى 200). يمكن تمرير
+`threshold` اختياريًا لتطبيق نفس العتبة على كل النصوص.
 
 ## ⚠️ ملاحظات مهمة قبل النشر الفعلي
 
